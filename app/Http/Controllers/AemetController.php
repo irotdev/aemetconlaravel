@@ -7,14 +7,38 @@ use Illuminate\Support\Facades\Http;
 
 class AemetController extends Controller
 {
+    /*
     public function index() {
         return view ('index');
     }
+    */
 
     public function search(Request $request) {
         $data = $request->validate([
             'city' => 'required'
         ]);
+
+
+        // echo asset('storage/file.txt');
+        $arrayStationName = array();
+        $arrayStationLatitude = array();
+        $arrayStationLongitude = array();
+
+        $content= file_get_contents('storage/geo.id');
+        $lines = explode("\r\n", $content);
+        foreach ($lines as $line) {
+            $station = explode(";", $line);
+            //if (strlen($station[2]) > 1) {
+                $latitudeLongitude = explode(",", $station[3]);
+                $arrayStationName[(String) $station[1]] = $station[2];
+                $arrayStationLatitude[(String) $station[1]] = substr($latitudeLongitude[0], 1);
+                $arrayStationLongitude[(String) $station[1]] = substr($latitudeLongitude[1], 0, -1);
+                asort($arrayStationName);
+            //}
+        }
+
+        //dd($arrayStationLongitude);
+
         $cityNotFound = null;
         $city = $data['city'];
         switch($city) {
@@ -55,9 +79,24 @@ class AemetController extends Controller
             $temperatureMin = $lastValue['tamin'];
             $found = true;
             
-            return view('index', compact('found', 'city', 'cityNotFound', 'temperatureNow', 'temperatureMax', 'temperatureMin'));
+            return view('index', compact(
+                'found', 
+                'city', 
+                'cityNotFound', 
+                'temperatureNow', 
+                'temperatureMax', 
+                'temperatureMin',
+                'arrayStationName', 
+                'arrayStationLatitude', 
+                'arrayStationLongitude',
+            ));
         }
 
-        return view('index', compact('found'));
+        return view('index', compact(
+            'found', 
+            'arrayStationName', 
+            'arrayStationLatitude', 
+            'arrayStationLongitude',
+        ));
     }
 }

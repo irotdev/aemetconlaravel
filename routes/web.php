@@ -19,5 +19,5 @@ use App\Http\Controllers\AemetController;
 //    return view('welcome');
 //});
 
-Route::get('/', [AemetController::class, 'index']);
+//Route::get('/', [AemetController::class, 'index']);
 Route::get('/search', [AemetController::class, 'search'])->name('search');

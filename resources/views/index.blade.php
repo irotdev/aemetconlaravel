@@ -18,10 +18,9 @@
                 <input class="form-control" list="datalistOptions" id="city" name="city" placeholder="Escribe el nombre de la ciudad...">
                 <datalist id="datalistOptions">
                     <option value="Águilas">
-                    <option value="Cartagena">
-                    <option value="Lorca">
-                    <option value="Mazarrón">
-                    <option value="Murcia">
+                    @foreach($arrayStationName as $key => $value)
+                        <option value="{{ $value }}">
+                    @endforeach
                 </datalist>
             </div>
         </div>
